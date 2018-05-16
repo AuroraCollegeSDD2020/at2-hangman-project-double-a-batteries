@@ -1,1 +1,8 @@
-meeting stuff
+The client wants a simple game about death that is somehow relaxing (hangman options available)
+By june (6-7 weeks)
+Simple ole laptop
+Start as text then move to graphical
+Quick with a slight chance of multiple levels, interesting
+No offensive words about anything
+
+For first week produce a text based game thats easy to use, is straight forward and has no offensive words.
