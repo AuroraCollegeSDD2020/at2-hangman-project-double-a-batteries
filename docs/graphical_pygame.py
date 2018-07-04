@@ -1,11 +1,22 @@
+__author__ = "Bailey Foster"
+__license__ = "GPL"
+__version__ = "1.5.4"
+__email__ = "bailey.foster5@education.nsw.com.au"
+__status__ = "Production"
+
+#dependencies
 import pygame
 import time
 import extext
 import random
 import drawthingz
 
+#initializes pygame
 pygame.init()
 
+#define other setup variables
+
+#defining colours to use later on
 white = (255, 255, 255)
 black = (0, 0, 0)
 red = (200, 0, 0)
@@ -17,36 +28,37 @@ brightBlue = (0, 0, 255)
 orange = (255,69,0)
 brightOrange = (255,127,80)
 
-blocky = 10
-FPS = 30
-
+#sets width and height
 WIDTH = 800
 HEIGHT = 600
 
+#sets different text text sizes
 textbox = pygame.font.SysFont(None, 40)
 selections = pygame.font.SysFont(None, 20)
 ENOURMOUS = pygame.font.SysFont(None, 100)
 
-clock = pygame.time.Clock()
+#define neccesary classes
 
-class Setup:
+
+class Setup: #class used to set up pygame window and define crucial functions
     def __init__(self):
-        self.yes = False
-        self.moveOn = False
-        self.gameDisplay = pygame.display.set_mode((WIDTH, HEIGHT))
-        self.icon = pygame.image.load('icon.png')
-        pygame.display.set_caption('Get Hanged Man!!')
-        pygame.display.set_icon(self.icon)
+        self.yes = False #creates boolean
+        self.moveOn = False #creates boolean
+        self.gameDisplay = pygame.display.set_mode((WIDTH, HEIGHT)) #creates window to be called in an instance of this class
+        self.icon = pygame.image.load('icon.png') #loads image
+        pygame.display.set_caption('Get Hanged Man!!') #sets window name
+        pygame.display.set_icon(self.icon) #sets window icon
+        self.backGround = pygame.image.load("background.png") #loads another image to be used later
 
-    def custom_message(self, textType, msg, colour, theX, theY):
-        screen_text = textType.render(msg, True, colour)
-        self.gameDisplay.blit(screen_text, [theX, theY])
+    def custom_message(self, textType, msg, colour, theX, theY): #this function is used to put messages on the screen
+        screen_text = textType.render(msg, True, colour) # sets what the display will look like
+        self.gameDisplay.blit(screen_text, [theX, theY]) # puts the text on the screen with the given coordinates
 
-    def buttonify(self, msg, theX, theY, theW, theH, theI, theA, Action=None):
-        mouse = pygame.mouse.get_pos()
-        click = pygame.mouse.get_pressed()
+    def buttonify(self, msg, theX, theY, theW, theH, theI, theA, Action=None): #this function setus up buttons on the screen
+        mouse = pygame.mouse.get_pos() #gets the mouse position
+        click = pygame.mouse.get_pressed() #gets whether the mouse is clicked
 
-        if theX + theW > mouse[0] > theX and theY + theH > mouse[1] > theY:
+        if theX + theW > mouse[0] > theX and theY + theH > mouse[1] > theY: #
             pygame.draw.rect(self.gameDisplay, theA, (theX, theY, theW, theH))
             if click[0] == 1 and Action != None:
                 if Action == "trueName":
@@ -72,6 +84,8 @@ class Setup:
                     quit()
                 elif Action == "PlayAgain":
                     gameLoop.change = True
+                elif Action == "start":
+                    return True
 
         else:
             pygame.draw.rect(self.gameDisplay, theI, (theX, theY, theW, theH))
@@ -102,6 +116,25 @@ class Player:
         self.level4wordList = ["antidisestablishmentarianism", "pneumonoultramicroscopicsilicovolcanoconiosis",
                                "floccinaucinihilipilification", "supercalifragilisticexpialidocious",
                                "methionylthreonylthreonyglutaminylarginylisoleucine"]
+
+    def intro(self):
+        while True:
+            events = pygame.event.get()
+            instance.gameDisplay.blit(instance.backGround, (0, 0))
+            continues = instance.buttonify("Start", 400, 25, 300, 100, green, brightGreen, Action="start")
+            instance.buttonify("Quit", 400, 135, 300, 100, red, brightRed, Action="Quit")
+            pygame.display.update()
+            mouse = pygame.mouse.get_pos()
+            click = pygame.mouse.get_pressed()
+
+            if 50 + 130 > mouse[0] > 50 and 400 + 120 > mouse[1] > 400:
+                if click[0] == 1:
+                    print("you suck")
+            for event in events:
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+            if continues:
+                break
 
     def get_name(self):
         while True:
@@ -191,6 +224,10 @@ class game:
             self.x = 300
         elif len(self.length) == 6:
             self.x = 280
+        elif len(self.length) == 7:
+            self.x = 260
+        elif len(self.length) == 8:
+            self.x = 240
         for letter in self.length:
             if letter in self.rightLetters:
                 instance.custom_message(textbox, letter, black, self.x, self.y)
@@ -272,7 +309,7 @@ class game:
             for event in events:
                 if event.type == pygame.QUIT:
                     pygame.quit()
-            instance.custom_message(textbox, "Congratulations you guessed the Word!!", black, 125, 50)
+            instance.custom_message(textbox, "Congratulations you guessed the word " + Name + "!!", black, 100, 50)
             instance.custom_message(textbox, "The word was \"" + self.word + "\"", black, 250, 200)
             instance.buttonify("Click here to play again!!", 100, 300, 600, 100, green, brightGreen, Action="PlayAgain")
             instance.buttonify("Click here to Quit!!", 100, 450, 600, 100, red, brightRed, Action="Quit")
@@ -288,7 +325,7 @@ class game:
             for event in events:
                 if event.type == pygame.QUIT:
                     pygame.quit()
-            instance.custom_message(textbox, "You unfortunately did not guess the word!!", black, 125, 50)
+            instance.custom_message(textbox, "You unfortunately did not guess the word " + Name + "!!", black, 100, 50)
             instance.custom_message(textbox, "The word was \"" + self.word + "\"", black, 250, 200)
             instance.buttonify("Click here to play again!!", 100, 300, 600, 100, green, brightGreen, Action="PlayAgain")
             instance.buttonify("Click here to Quit!!", 100, 450, 600, 100, red, brightRed, Action="Quit")
@@ -296,11 +333,13 @@ class game:
 
         return "Please stop Erroring"
 
-
+#setup game
 draw = drawthingz.drawLevel()
 instance = Setup()
 player = Player()
+player.intro()
 Name = player.get_name()
+#game loop
 while True:
     Level = player.get_level()
     Word = player.get_word()
