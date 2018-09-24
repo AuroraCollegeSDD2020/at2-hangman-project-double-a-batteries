@@ -1,5 +1,5 @@
 # AT2-Major-Project
-Major Project is to develop a Graphical Hangman Game using pygame
+Major Project is to develop a Graphical Hangman Game using chicken.
 
 ## Overview
 You will be working in groups of two to three students to create a simple game for a client.
